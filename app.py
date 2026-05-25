@@ -1,3 +1,4 @@
+from flask import request
 from flask import send_file
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
@@ -98,22 +99,32 @@ def add_student():
 
     except Exception as e:
         return f"Error: {e}"
-@app.route('/search', methods=['GET', 'POST'])
+
+
+@app.route('/search', methods=['POST'])
 def search():
-    if request.method == 'POST':
-        student_id = request.form['id']
 
-        conn = sqlite3.connect('students.db')
-        cursor = conn.cursor()
+    student_id = request.form['student_id']
 
-        cursor.execute("SELECT * FROM students WHERE id=?", (student_id,))
-        result = cursor.fetchall()
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
 
-        conn.close()
+    cursor.execute(
+        "SELECT * FROM students WHERE id=?",
+        (student_id,)
+    )
 
-        return render_template('dashboard.html', data=result)
+    student = cursor.fetchone()
 
-    return redirect('/dashboard')
+    conn.close()
+
+    if student:
+        return render_template(
+            'search_result.html',
+            student=student
+        )
+
+    return "Student Not Found"
 
 @app.route('/subject-analysis')
 def subject_analysis():

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Search Result</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static',
+    filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="main-content">
+
+    <div class="card">
+
+        <h2>Student Details</h2>
+
+        <p><b>ID:</b> {{ student[0] }}</p>
+        <p><b>Marks:</b> {{ student[1] }}</p>
+        <p><b>Attendance:</b> {{ student[2] }}</p>
+        <p><b>Study Hours:</b> {{ student[3] }}</p>
+        <p><b>Previous Score:</b> {{ student[4] }}</p>
+        <p><b>Subject:</b> {{ student[5] }}</p>
+
+        <br>
+
+        <a href="/dashboard">
+            <button>Back</button>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

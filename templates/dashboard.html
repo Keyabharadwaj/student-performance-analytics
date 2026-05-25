@@ -1,311 +1,228 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Dashboard</title>
 
-    <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
 
-</head>
-
-<body>
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-
-    <h2 class="logo">
-
-        <img src="{{ url_for('static', filename='images/logo.png') }}"
-        width="35">
+  <body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <h2 class="logo">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          width="35"
+        />
 
         Analytics
+      </h2>
 
-    </h2>
+      <ul>
+        <li onclick="showSection('dashboardSection')">📊 Dashboard</li>
 
-    <ul>
+        <li onclick="showSection('addSection')">➕ Add Student</li>
 
-        <li onclick="showSection('dashboardSection')">
-            📊 Dashboard
-        </li>
+        <li onclick="showSection('searchSection')">🔍 Search Student</li>
 
-        <li onclick="showSection('addSection')">
-            ➕ Add Student
-        </li>
+        <li onclick="showSection('reportSection')">📄 Reports</li>
 
-        <li onclick="showSection('searchSection')">
-            🔍 Search Student
-        </li>
+        <!-- THEME -->
 
-        <li onclick="showSection('reportSection')">
-            📄 Reports
-        </li>
-        
-            <!-- THEME -->
+        <li onclick="toggleTheme()">🌙 Theme Mode</li>
 
-    <li onclick="toggleTheme()">
-        🌙 Theme Mode
-    </li>
+        <!-- LOGOUT -->
 
-    <!-- LOGOUT -->
+        <li onclick="window.location.href = '/logout'">🚪 Logout</li>
+      </ul>
+    </div>
 
-    <li onclick="window.location.href='/logout'">
-        🚪 Logout
-    </li>
+    <!-- MAIN -->
 
-    </ul>
+    <div class="main-content">
+      <!-- DASHBOARD -->
 
-</div>
-
-<!-- MAIN -->
-
-<div class="main-content">
-
-    <!-- DASHBOARD -->
-
-    <section id="dashboardSection"
-    class="content-section active">
-
+      <section id="dashboardSection" class="content-section active">
         <h1>Student Analytics Dashboard</h1>
 
         <!-- CARDS -->
 
         <div class="cards">
+          <div class="card">
+            <h3>Total Students</h3>
 
-            <div class="card">
+            <p>{{ data|length }}</p>
+          </div>
 
-                <h3>Total Students</h3>
+          <div class="card">
+            <h3>Average Marks</h3>
 
-                <p>{{ data|length }}</p>
+            <p>
+              {{ (data | map(attribute=1) | list | sum // (data|length if
+              data|length>0 else 1)) }}
+            </p>
+          </div>
 
-            </div>
+          <div class="card">
+            <h3>Status</h3>
 
-            <div class="card">
-
-                <h3>Average Marks</h3>
-
-                <p>
-                    {{
-                    (data | map(attribute=1)
-                    | list
-                    | sum
-                    //
-                    (data|length if data|length>0 else 1))
-                    }}
-                </p>
-
-            </div>
-
-            <div class="card">
-
-                <h3>Status</h3>
-
-                <p>📈 Active</p>
-
-            </div>
-
+            <p>📈 Active</p>
+          </div>
         </div>
 
         <!-- CHART -->
 
         <div class="chart-card">
+          <h3>Performance Analytics</h3>
 
-            <h3>Performance Analytics</h3>
-
-            <canvas id="myChart"></canvas>
-
+          <canvas id="myChart"></canvas>
         </div>
 
         <!-- TABLE -->
 
         <div class="table-container">
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>Marks</th>
+              <th>Attendance</th>
+              <th>Study Hours</th>
+              <th>Previous Score</th>
+              <th>Subject</th>
+            </tr>
 
-            <table>
+            {% for row in data %}
 
-                <tr>
+            <tr>
+              <td>{{ row[0] }}</td>
+              <td>{{ row[1] }}</td>
+              <td>{{ row[2] }}</td>
+              <td>{{ row[3] }}</td>
+              <td>{{ row[4] }}</td>
+              <td>{{ row[5] }}</td>
+            </tr>
 
-                    <th>ID</th>
-                    <th>Marks</th>
-                    <th>Attendance</th>
-                    <th>Study Hours</th>
-                    <th>Previous Score</th>
-                    <th>Subject</th>
-
-                </tr>
-
-                {% for row in data %}
-
-                <tr>
-
-                    <td>{{ row[0] }}</td>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                    <td>{{ row[4] }}</td>
-                    <td>{{ row[5] }}</td>
-
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
+            {% endfor %}
+          </table>
         </div>
+      </section>
 
-    </section>
+      <!-- ADD STUDENT -->
 
-    <!-- ADD STUDENT -->
-
-    <section id="addSection"
-    class="content-section">
-
+      <section id="addSection" class="content-section">
         <div class="form-card">
+          <h2>Add Student</h2>
 
-            <h2>Add Student</h2>
+          <form action="/add_student" method="POST">
+            <input type="number" name="marks" placeholder="Marks" required />
 
-            <form action="/add_student" method="POST">
+            <input
+              type="number"
+              name="attendance"
+              placeholder="Attendance"
+              required
+            />
 
-                <input type="number"
-                name="marks"
-                placeholder="Marks"
-                required>
+            <input
+              type="number"
+              name="study_hours"
+              placeholder="Study Hours"
+              required
+            />
 
-                <input type="number"
-                name="attendance"
-                placeholder="Attendance"
-                required>
+            <input
+              type="number"
+              name="previous_score"
+              placeholder="Previous Score"
+              required
+            />
 
-                <input type="number"
-                name="study_hours"
-                placeholder="Study Hours"
-                required>
+            <input type="text" name="subject" placeholder="Subject" required />
 
-                <input type="number"
-                name="previous_score"
-                placeholder="Previous Score"
-                required>
-
-                <input type="text"
-                name="subject"
-                placeholder="Subject"
-                required>
-
-                <button type="submit">
-                    Add Student
-                </button>
-
-            </form>
-
+            <button type="submit">Add Student</button>
+          </form>
         </div>
+      </section>
 
-    </section>
+      <!-- SEARCH -->
 
-    <!-- SEARCH -->
-
-    <section id="searchSection"
-    class="content-section">
-
+      <section id="searchSection" class="content-section">
         <div class="form-card">
+          <h2>Search Student</h2>
 
-            <h2>Search Student</h2>
+          <form action="/search" method="POST" class="search-bar">
+            <input
+              type="number"
+              name="student_id"
+              placeholder="Enter Student ID"
+              required
+            />
 
-            <form action="/search" method="POST">
-
-                <input type="number"
-                name="student_id"
-                placeholder="Enter Student ID"
-                required>
-
-                <button type="submit">
-                    Search
-                </button>
-
-            </form>
-
+            <button type="submit" class="premium-btn">Search</button>
+            
+          </form>
         </div>
+      </section>
 
-    </section>
+      <!-- REPORT -->
 
-    <!-- REPORT -->
-
-    <section id="reportSection"
-    class="content-section">
-
+      <section id="reportSection" class="content-section">
         <div class="form-card">
+          <h2>Download Report</h2>
 
-            <h2>Download Report</h2>
-
-            <a href="/download-report">
-
-                <button>
-                    Download PDF
-                </button>
-
-            </a>
-
+          <a href="/download-report">
+            <button>Download PDF</button>
+          </a>
         </div>
+      </section>
+    </div>
 
-    </section>
+    <!-- CHART DATA -->
 
-</div>
+    <div
+      id="chart-data"
+      data-marks="{{ data | map(attribute=1) | list | tojson }}"
+      data-labels="{{ data | map(attribute=0) | list | tojson }}"
+    ></div>
 
-<!-- CHART DATA -->
+    <!-- CHART SCRIPT -->
 
-<div id="chart-data"
+    <script>
+      const chartData = document.getElementById("chart-data");
 
-data-marks='{{ data | map(attribute=1) | list | tojson }}'
+      let marks = JSON.parse(chartData.dataset.marks);
 
-data-labels='{{ data | map(attribute=0) | list | tojson }}'>
+      let labels = JSON.parse(chartData.dataset.labels);
 
-</div>
+      const ctx = document.getElementById("myChart");
 
-<!-- CHART SCRIPT -->
+      new Chart(ctx, {
+        type: "line",
 
-<script>
+        data: {
+          labels: labels,
 
-const chartData =
-document.getElementById('chart-data');
+          datasets: [
+            {
+              label: "Marks Trend",
 
-let marks =
-JSON.parse(chartData.dataset.marks);
+              data: marks,
 
-let labels =
-JSON.parse(chartData.dataset.labels);
+              tension: 0.4,
+            },
+          ],
+        },
+      });
+    </script>
 
-const ctx =
-document.getElementById('myChart');
-
-new Chart(ctx, {
-
-    type: 'line',
-
-    data: {
-
-        labels: labels,
-
-        datasets: [{
-
-            label: 'Marks Trend',
-
-            data: marks,
-
-            tension: 0.4
-
-        }]
-
-    }
-
-});
-
-</script>
-
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
-</body>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
 </html>
