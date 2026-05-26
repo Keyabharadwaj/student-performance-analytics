@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Dashboard</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- 
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    /> -->
 
     <link
       rel="stylesheet"
@@ -18,20 +21,9 @@
 
   <body>
     <div class="topbar">
-      <div>
-        <h2>Student Performance Analytics</h2>
-        <p>Welcome Back Admin 👋</p>
-      </div>
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
 
-      <div class="topbar-right">
-        <input type="text" placeholder="Search..." />
-
-        <img
-          src="{{ url_for('static',
-        filename='images/logo.png') }}"
-          class="profile-img"
-        />
-      </div>
+      <h2>Student Analytics</h2>
     </div>
 
     <!-- SIDEBAR -->
