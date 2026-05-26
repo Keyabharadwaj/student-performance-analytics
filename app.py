@@ -7,6 +7,7 @@ import pandas as pd
 from model import model
 import sqlite3
 import webbrowser
+import os
 import threading
 
 def open_browser():
@@ -209,6 +210,10 @@ def logout():
     return redirect(url_for('login'))                      
 
 if __name__ == '__main__':
-    threading.Timer(1, open_browser).start()
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=5000) 
+
+    port = int(os.environ.get("PORT", 5000))
+
+    app.run(
+        host='0.0.0.0',
+        port=port
+    )
