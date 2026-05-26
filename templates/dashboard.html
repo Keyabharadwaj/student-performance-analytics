@@ -6,6 +6,8 @@
 
     <title>Dashboard</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
@@ -15,6 +17,23 @@
   </head>
 
   <body>
+    <div class="topbar">
+      <div>
+        <h2>Student Performance Analytics</h2>
+        <p>Welcome Back Admin 👋</p>
+      </div>
+
+      <div class="topbar-right">
+        <input type="text" placeholder="Search..." />
+
+        <img
+          src="{{ url_for('static',
+        filename='images/logo.png') }}"
+          class="profile-img"
+        />
+      </div>
+    </div>
+
     <!-- SIDEBAR -->
     <div class="sidebar">
       <h2 class="logo">
@@ -167,7 +186,6 @@
             />
 
             <button type="submit" class="premium-btn">Search</button>
-            
           </form>
         </div>
       </section>

@@ -12,6 +12,13 @@ function showSection(sectionId){
     .classList.add('active');
 }
 
+function toggleSidebar(){
+
+    document.querySelector('.sidebar')
+    .classList.toggle('active');
+
+}
+
 
 // 🔹 DARK/LIGHT THEME TOGGLE
 function toggleTheme(){
